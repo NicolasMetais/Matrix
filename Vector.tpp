@@ -1,0 +1,105 @@
+template <typename K>
+void Vector<K>::add(const Vector<K>& v) {
+	if (size() != v.size())
+		throw std::invalid_argument("Vectors must be the same size");
+	for(size_t i = 0; i < size(); ++i)
+		data[i] += v.data[i];
+}
+
+template <typename K>
+void Vector<K>::sub(const Vector<K>& v) {
+	if (size() != v.size())
+		throw std::invalid_argument("Vectors must be the same size");
+	for(size_t i = 0; i < size(); ++i)
+		data[i] -= v.data[i];
+}
+
+template <typename K>
+void Vector<K>::scl(const K& val) {
+	for(size_t i = 0; i < size(); ++i)
+		data[i] *= val;
+}
+
+template <typename K>
+Vector<K> linear_combination(const std::vector<Vector<K>>& u, const std::vector<K>& coefs) {
+	// if (u.size() != coefs.size())
+	// 	throw std::invalid_argument("The vectors and the coefs sizes must be the same");
+	if (u.empty())
+        throw std::invalid_argument("Empty vector list");
+	size_t len = u[0].size();
+	Vector<K> result;
+	result.data.resize(len, K{0});
+	for (size_t i = 0; i < u.size(); ++i)
+	{
+		// if (u[i].size() != len)
+		// 	throw std::invalid_argument("The vectors must all be the same size");
+		for (size_t j = 0; j < len; j++)
+			result.data[j] += coefs[i] * u[i].data[j];
+	}
+	return result;
+}
+
+template <typename K>
+K Vector<K>::dot(const Vector<K>& v) const{
+	if (size() != v.size())
+		throw std::invalid_argument("The vectors sizes must be the same");
+	K result{};
+	for (size_t i = 0; i < data.size(); ++i)
+		result += data[i] * v.data[i];
+	return result;
+}
+
+template <typename K> //norm taxicab/Manhattan, distance case par case
+float Vector<K>::norm_1() const{
+	float norm = 0;
+	for (auto& i : data)
+		norm += std::abs(i);
+	return norm;
+}
+
+template <typename K> //norm euclidienne, pythagore "vol d'oiseau"
+float Vector<K>::norm() const{
+	float norm = 0.0f;
+	for (auto const& v : data)
+		norm += std::pow(std::abs(v), 2.0f);
+	return std::pow(norm, 0.5f);
+}
+
+template <typename K> //norm supremum, valeur max du vecteur
+float Vector<K>::norm_inf() const{
+	float max = 0;
+	for (auto& i : data)
+		max = std::max(max, std::abs(i));
+	return max;
+}
+
+template <typename K>
+size_t Vector<K>::size() const {
+	return data.size();
+}
+
+template <typename K>
+bool Vector<K>::empty() const {
+	return data.empty();
+}
+
+template <typename K>
+float angle_cos(const Vector<K>&u, const Vector<K>&v) {
+	if (u.size() != v.size())
+		throw std::invalid_argument("The vectors and the coefs sizes must be the same");
+	if (u.empty())
+        throw std::invalid_argument("Empty vectors");
+	return std::real(u.dot(v)) / (u.norm() * v.norm());
+}
+
+template <typename K>
+Vector<K> cross_product(const Vector<K>&u, const Vector<K>&v) {
+	if (u.size() != 3 ||  v.size() != 3)
+		throw std::invalid_argument("The vectors must be of size 3");
+	Vector<K> crossed = {K(0), K(0), K(0)};
+	crossed[0] = u[1] * v[2] - u[2] * v[1];
+	crossed[1] = u[2] * v[0] - u[0] * v[2]; 
+	crossed[2] = u[0] * v[1] - u[1] * v[0]; 
+	return crossed;
+}
+

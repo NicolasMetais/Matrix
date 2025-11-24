@@ -339,3 +339,21 @@ Matrix<K> projection(float fov, float ratio, float near, float far) {
 	});
 	return proj;
 };
+
+template <typename K>
+Matrix<K> Matrix<K>::operator*(K f) const {
+	Matrix<K> res = *this;
+	res.scl(f);
+	return res;
+};
+
+template <typename K>
+Matrix<K> Matrix<K>::operator*(const Matrix<K>& m) const {
+	return mul_mat(m);
+};
+
+template <typename K>
+Matrix<K> Matrix<K>::operator*(const Vector<K>& v) const {
+	return mul_vec(v);
+};
+

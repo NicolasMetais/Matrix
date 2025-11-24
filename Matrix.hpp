@@ -28,6 +28,9 @@ struct Matrix {
 	Matrix<K> submatrix(size_t r, size_t c) const;
 	std::vector<K>& operator[](size_t i) { return data[i]; }
 	const std::vector<K>& operator[](size_t i) const { return data[i]; }
+	Matrix<K> operator*(K f) const;
+	Matrix<K> operator*(const Vector<K>& v) const;
+	Matrix<K> operator*(const Matrix<K>& m) const;
 	Matrix() = default;
 	Matrix(std::initializer_list<std::initializer_list<K>> list) : data(list.begin(), list.end()) {};
 	friend std::ostream& operator<<(std::ostream& os, const Matrix<K>& m) {

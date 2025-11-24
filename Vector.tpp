@@ -103,3 +103,203 @@ Vector<K> cross_product(const Vector<K>&u, const Vector<K>&v) {
 	return crossed;
 }
 
+template <typename K>
+Vector<K> Vector<K>::operator*(K f) const {
+	Vector<K> res(size());
+	for(size_t i = 0; i < res.size(); ++i)
+		res[i] = data[i] * f;
+	return res;
+};
+
+template <typename K>
+Vector<K> Vector<K>::operator/(K f) const {
+	if (f == static_cast<K>(0))
+		throw std::invalid_argument("I can't divide by 0 bruh");
+	Vector<K> res(size());
+	for(size_t i = 0; i < res.size(); ++i)
+		res[i] = data[i] / f;
+	return res;
+};
+
+template <typename K>
+Vector<K> Vector<K>::operator+(const Vector<K>& v) const {
+	if (size() != v.size())
+		throw std::invalid_argument("Vector size do not match");
+	Vector<K> res(size());
+	for(size_t i = 0; i < res.size(); ++i)
+		res[i] = data[i] + v[i];
+	return res;
+};
+
+template <typename K>
+Vector<K> Vector<K>::operator-(const Vector<K>& v) const {
+	if (size() != v.size())
+		throw std::invalid_argument("Vector size do not match");
+	Vector<K> res(size());
+	for(size_t i = 0; i < res.size(); ++i)
+		res[i] = data[i] - v[i];
+	return res;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator+=(const Vector<K>& v) {
+	add(v);
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator+=(const K& f)
+{
+	for(size_t i = 0; i < size(); ++i) {
+		data[i] += f;
+	}
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator-=(const Vector<K>& v) {
+	sub(v);
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator-=(const K& f)
+{
+	for(size_t i = 0; i < size(); ++i) {
+		data[i] -= f;
+	}
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator*=(const Vector<K>& v) {
+	if (size() != v.size())
+		throw std::invalid_argument("Vector size do not match");
+	for(size_t i = 0; i < size(); ++i) {
+		data[i] *= v[i];
+	}
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator*=(const K& f)
+{
+	scl(f);
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator/=(const Vector<K>& v) {
+	if (size() != v.size())
+		throw std::invalid_argument("Vector size do not match");
+	for(size_t i = 0; i < size(); ++i) {
+		if (v[i] == static_cast<K>(0))
+			throw std::invalid_argument("I can't divide by 0 bruh");
+		data[i] /= v[i];
+	}
+	return *this;
+};
+
+template <typename K>
+Vector<K>& Vector<K>::operator/=(const K& f)
+{
+	if (f == static_cast<K>(0))
+		throw std::invalid_argument("I can't divide by 0 bruh");
+	for(size_t i = 0; i < size(); ++i) {
+		data[i] /= f;
+	}
+	return *this;
+};
+
+template <typename K>
+K& Vector<K>::x() {
+	if (size() < 1)
+		throw std::invalid_argument("Vector size must be >= 1");
+	return data[0];
+};
+
+template <typename K>
+const K& Vector<K>::x() const {
+	if (size() < 1)
+		throw std::invalid_argument("Vector size must be >= 1");
+	return data[0];
+};
+
+template <typename K>
+K& Vector<K>::y() {
+	if (size() < 2)
+		throw std::invalid_argument("Vector size must be >= 2");
+	return data[1];
+};
+
+template <typename K>
+const K& Vector<K>::y() const {
+	if (size() < 2)
+		throw std::invalid_argument("Vector size must be >= 2");
+	return data[1];
+};
+
+template <typename K>
+K& Vector<K>::z() {
+	if (size() < 3)
+		throw std::invalid_argument("Vector size must be >= 3");
+	return data[2];
+};
+
+template <typename K>
+const K& Vector<K>::z() const {
+	if (size() < 3)
+		throw std::invalid_argument("Vector size must be >= 3");
+	return data[2];
+};
+
+template <typename K>
+K& Vector<K>::w() {
+	if (size() < 4)
+		throw std::invalid_argument("Vector size must be >= 4");
+	return data[3];
+};
+
+template <typename K>
+const K& Vector<K>::w() const {
+	if (size() < 4)
+		throw std::invalid_argument("Vector size must be >= 4");
+	return data[3];
+};
+
+template <typename K>
+Vector<K> Vector<K>::normalize() const {
+	float n = norm();
+	Vector<K>res(size());
+	if (n == 0.0f) {
+		for (size_t i = 0; i < size(); ++i) {
+			res[i] = 0.0f;
+		}
+		return res;
+	}
+	for (size_t i = 0; i < size(); ++i) {
+		res[i] = data[i] / n;
+	}
+	return res;
+};
+
+template <typename K>
+void Vector<K>::Rotate(float angle, const Vector<K>& axis) {
+	if (size() < 3 || axis.size() < 3)
+		return ;
+	Quaternion<K> q(angle, axis);
+	q.normalize();
+	Vector<K> v{data[0], data[1], data[2]};
+	Vector<K> rotated = q * v;
+	data[0] = rotated[0];
+	data[1] = rotated[1];
+	data[2] = rotated[2];
+};
+
+
+// template <typename K>
+// Vector<K>& Vector<K>::operator=(const Vector<K>& v) {
+// 	if (this != &v)
+// 		data = v.data;
+// 	return *this;
+// };

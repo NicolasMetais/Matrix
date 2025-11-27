@@ -7,7 +7,10 @@
 
 template <typename K>
 struct Matrix {
-	std::vector<std::vector<K>> data;
+	std::vector<K> data;
+	size_t rows;
+	size_t cols;
+
 	std::pair<size_t, size_t> shape() const;
 	void add(const Matrix<K>& m);
 	void sub(const Matrix<K>& m);
@@ -16,23 +19,24 @@ struct Matrix {
 	K trace() const;
 	size_t size() const;
 	bool empty() const;
-	Vector<K> mul_vec(const Vector<K>& vec);
-	Matrix<K> mul_mat(const Matrix<K>& vec);
+	Vector<K> mul_vec(const Vector<K>& vec) const;
+	Matrix<K> mul_mat(const Matrix<K>& vec) const;
 	Matrix<K> transpose() const;
 	Matrix<K> row_echelon() const;
 	Matrix<K> row_echelon_det(size_t *swap) const;
 	Matrix<K> reduced_row_echelon() const;
 	K determinant() const;
+	K* datal() { return data.data(); }
 	Matrix<K> inverse() const;
 	size_t rank() const;
 	Matrix<K> submatrix(size_t r, size_t c) const;
-	std::vector<K>& operator[](size_t i) { return data[i]; }
-	const std::vector<K>& operator[](size_t i) const { return data[i]; }
+	K* operator[](size_t i) { return data.data() + i * cols; }
+	const K* operator[](size_t i) const { return data.data() + i * cols; }
 	Matrix<K> operator*(K f) const;
-	Matrix<K> operator*(const Vector<K>& v) const;
+	Vector<K> operator*(const Vector<K>& v) const;
 	Matrix<K> operator*(const Matrix<K>& m) const;
 	Matrix() = default;
-	Matrix(std::initializer_list<std::initializer_list<K>> list) : data(list.begin(), list.end()) {};
+	Matrix(std::initializer_list<std::initializer_list<K>> list);
 	friend std::ostream& operator<<(std::ostream& os, const Matrix<K>& m) {
 		for (size_t i = 0; i < m.data.size(); ++i)
 		{

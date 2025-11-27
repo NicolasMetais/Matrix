@@ -1,4 +1,7 @@
 template <typename K>
+Vector<K>::Vector(size_t n) : data(n) {};
+
+template <typename K>
 void Vector<K>::add(const Vector<K>& v) {
 	if (size() != v.size())
 		throw std::invalid_argument("Vectors must be the same size");
@@ -105,7 +108,8 @@ Vector<K> cross_product(const Vector<K>&u, const Vector<K>&v) {
 
 template <typename K>
 Vector<K> Vector<K>::operator*(K f) const {
-	Vector<K> res(size());
+	Vector<K> res;
+	res.data.resize(size());
 	for(size_t i = 0; i < res.size(); ++i)
 		res[i] = data[i] * f;
 	return res;
@@ -135,7 +139,8 @@ template <typename K>
 Vector<K> Vector<K>::operator-(const Vector<K>& v) const {
 	if (size() != v.size())
 		throw std::invalid_argument("Vector size do not match");
-	Vector<K> res(size());
+	Vector<K> res;
+	res.data.resize(size());
 	for(size_t i = 0; i < res.size(); ++i)
 		res[i] = data[i] - v[i];
 	return res;
@@ -270,7 +275,8 @@ const K& Vector<K>::w() const {
 template <typename K>
 Vector<K> Vector<K>::normalize() const {
 	float n = norm();
-	Vector<K>res(size());
+	Vector<K>res;
+	res.data.resize(size());
 	if (n == 0.0f) {
 		for (size_t i = 0; i < size(); ++i) {
 			res[i] = 0.0f;
@@ -287,7 +293,7 @@ template <typename K>
 void Vector<K>::Rotate(float angle, const Vector<K>& axis) {
 	if (size() < 3 || axis.size() < 3)
 		return ;
-	Quaternion<K> q(angle, axis);
+	Quaternion<K> q(angle, axis.normalize());
 	q.normalize();
 	Vector<K> v{data[0], data[1], data[2]};
 	Vector<K> rotated = q * v;

@@ -4,6 +4,9 @@
 #include <cmath>
 
 template <typename K>
+struct Vector;
+
+template <typename K>
 struct Quaternion {
 	K w, x, y, z;
 	Quaternion() : w(1), x(0), y(0), z(0) {}
@@ -16,7 +19,7 @@ struct Quaternion {
 
 	Quaternion<K> operator*(const Quaternion& r) const;
 	Quaternion<K> Rotate(float angle, const Vector<K>axis) const;
-	// Vector<K> operator*(const Vector<K>& v) const;
+	Vector<K> operator*(const Vector<K>& v) const;
 
 	// Matrix<K> toMatrix3() const;
 	// Matrix<K> toMatrix4() const;

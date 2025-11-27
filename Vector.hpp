@@ -3,6 +3,7 @@
 #include <vector>
 #include <math.h>
 #include <complex>
+#include "Quaternion.hpp"
 
 template <typename K>
 struct Quaternion;
@@ -24,6 +25,7 @@ struct Vector {
 	K& operator[](size_t i) { return data[i]; }
 	const K& operator[](size_t i) const { return data[i]; }
 	Vector() = default;
+	Vector(size_t n);
 	//variadic template constructor for multiple args
 	// template <typename... Args>
 	// Vector(Args... args) : data{static_cast<K>(args)...} {};

@@ -45,5 +45,5 @@ template <typename K>
 Vector<K> Quaternion<K>::operator*(const Vector<K>& v) const {
 	Quaternion<K> vq(0, v.x(), v.y(), v.z());
 	Quaternion<K> rq = *this * vq * conjugate();
-	return Vector<K>(rq.x, rq.y, rq.z);
+	return Vector<K>{rq.x, rq.y, rq.z};
 };

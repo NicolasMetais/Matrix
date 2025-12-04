@@ -293,19 +293,28 @@ template <typename K>
 void Vector<K>::Rotate(float angle, const Vector<K>& axis) {
 	if (size() < 3 || axis.size() < 3)
 		return ;
-	Quaternion<K> q(angle, axis.normalize());
-	q.normalize();
-	Vector<K> v{data[0], data[1], data[2]};
-	Vector<K> rotated = q * v;
-	data[0] = rotated[0];
-	data[1] = rotated[1];
-	data[2] = rotated[2];
+	Quaternion<K> Rotation(angle, axis);
+
+	Quaternion<K> conj = Rotation.conjugate();
+
+	Quaternion<K> W = Rotation * (*this) * conj;
+
+	x() = W.x;
+	y() = W.y;
+	z() = W.z;
+	// Quaternion<K> q(angle, axis.normalize());
+	// q.normalize();
+	// Vector<K> v{data[0], data[1], data[2]};
+	// Vector<K> rotated = q * v;
+	// data[0] = rotated[0];
+	// data[1] = rotated[1];
+	// data[2] = rotated[2];
 };
 
-
-// template <typename K>
-// Vector<K>& Vector<K>::operator=(const Vector<K>& v) {
-// 	if (this != &v)
-// 		data = v.data;
-// 	return *this;
-// };
+template <typename K>
+Vector<K> Vector<K>::operator-() const{
+	Vector<K>res(size());
+	for (size_t i = 0; i < size(); ++i)
+		res[i] = -data[i];
+	return res;
+};

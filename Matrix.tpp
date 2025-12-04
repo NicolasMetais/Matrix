@@ -279,16 +279,16 @@ Matrix<K> Matrix<K>::inverse() const {
 		throw std::invalid_argument("Matrix must be a square");
 	Matrix<K> ident = identity<K>(this->rows);
 	Matrix<K> res = *this;
-	for (size_t i = 0; i < this->rows; ++i) {
-		K pivot = res[i][i]; //recherche de pivot
+	for (size_t i = 0; i < res.rows; ++i) {
+		K pivot = res[i * res.cols + i]; //recherche de pivot
 		if (isZero(pivot)) // si le pivot est nul j'en cherche un non nul et je swap la ligne
 		{
 			bool found = false;
-			for (size_t j = i + 1; j < this->rows; ++j){
-				if (!isZero(res[j][i])) {
+			for (size_t j = i + 1; j < res.rows; ++j){
+				if (!isZero(res[j * res.cols + i])) {
 					std::swap(res[i], res[j]);
 					std::swap(ident[i], ident[j]);
-					pivot = res[i][i];
+					pivot = res[i * cols + i];
 					found = true;
 					break ;
 				}
@@ -296,17 +296,17 @@ Matrix<K> Matrix<K>::inverse() const {
 			if (!found)
 				throw std::invalid_argument("Singular Matrix");
 		}
-		for (size_t j = 0; j < this->rows; ++j) { // je normalise toute la ligne pour obtenir des 1.0 en diagonale
+		for (size_t j = 0; j < res.rows; ++j) { // je normalise toute la ligne pour obtenir des 1.0 en diagonale
 			res[i][j] /= pivot;
 			ident[i][j] /= pivot;
 		}
-		for (size_t j = 0; j < this->rows; ++j) { //je vide toute la matrice sauf les pivot
+		for (size_t j = 0; j < res.rows; ++j) { //je vide toute la matrice sauf les pivot
 			if (j == i)
 				continue ;
 			K factor = res[j][i];
-			for (size_t k = 0; k < this->rows; ++k) {
-				res[j][k] -= factor * res[i][k];
-				ident[j][k] -= factor * ident[i][k];
+			for (size_t k = 0; k < res.rows; ++k) {
+				res[j * res.cols + k] -= factor * res[i * res.cols + k];
+				ident[j * res.cols + k] -= factor * ident[i * res.cols + k];
 			}
 		}
 	}
@@ -318,9 +318,9 @@ size_t Matrix<K>::rank() const {
 	Matrix<K> RREF;
 	size_t rank = 0;
 	RREF = reduced_row_echelon();
-	for (size_t i = 0; i < this->rows; ++i) {
-		for (size_t j = 0; j < this->cols; ++j) { //Je parcourt la RREF jusqu'a trouver qqch different de 0 qui sera automatiquement mon pivot. Si je trouve qqch je change de ligne
-			if (!isZero(RREF[i][j])) {
+	for (size_t i = 0; i < RREF.rows; ++i) {
+		for (size_t j = 0; j < RREF.cols; ++j) { //Je parcourt la RREF jusqu'a trouver qqch different de 0 qui sera automatiquement mon pivot. Si je trouve qqch je change de ligne
+			if (!isZero(RREF[i  * RREF.cols + j])) {
 				rank++;
 				break ;
 			}

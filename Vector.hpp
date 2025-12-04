@@ -44,6 +44,7 @@ struct Vector {
 	Vector<K>& operator*=(const K& f);
 	Vector<K>& operator/=(const Vector<K>& v);
 	Vector<K>& operator/=(const K& f);
+	Vector<K> operator-() const;
 	K& x();
 	const K& x() const;
 	K& y();

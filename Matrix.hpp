@@ -38,14 +38,14 @@ struct Matrix {
 	Matrix() = default;
 	Matrix(std::initializer_list<std::initializer_list<K>> list);
 	friend std::ostream& operator<<(std::ostream& os, const Matrix<K>& m) {
-		for (size_t i = 0; i < m.data.size(); ++i)
+		for (size_t i = 0; i < m.rows; ++i)
 		{
 			os << "{";
 
-			for (size_t j = 0; j < m.data[i].size(); ++j)
+			for (size_t j = 0; j < m.cols; ++j)
 			{
-				os << m.data[i][j];
-				if (j < m.data[i].size() - 1)
+				os << m.data[i * m.cols + j];
+				if (j < m.cols - 1)
 					os << ", ";
 			}
 			os << "} ";
